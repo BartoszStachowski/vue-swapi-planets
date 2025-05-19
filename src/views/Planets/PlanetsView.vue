@@ -21,8 +21,6 @@ const formatDate = (dateString: string) => {
 };
 
 await getPlanets();
-
-// await getPlanets();
 </script>
 <template>
   <div class="min-h-screen bg-gray-950 text-white px-4 py-8 md:px-12">

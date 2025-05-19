@@ -6,7 +6,8 @@ import PlanetsView from '@/views/Planets/PlanetsView.vue';
   <Suspense>
     <PlanetsView />
     <template #fallback>
-      <h1>Loading...</h1>
+      <!-- TODO: add loader -->
+      <h1 class="text-white">Loading...</h1>
     </template>
   </Suspense>
 </template>
