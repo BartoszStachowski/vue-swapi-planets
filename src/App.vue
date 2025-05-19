@@ -1,7 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import PlanetsView from '@/views/Planets/PlanetsView.vue';
+</script>
 
 <template>
-  <h1 class="text-white">app</h1>
+  <Suspense>
+    <PlanetsView />
+    <template #fallback>
+      <h1>Loading...</h1>
+    </template>
+  </Suspense>
 </template>
 
 <style scoped></style>
