@@ -43,8 +43,6 @@ await getPlanets();
     </section>
 
     <section class="mb-10">
-      <!-- TODO: create component -->
-
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <li v-for="planet in paginatedPlanets" :key="planet.name">
           <PlanetCard :planet="planet" />
