@@ -21,6 +21,7 @@ const getPlanets = async () => {
   const { data, error } = await useFetch<Planet[]>('https://swapi.info/api/planets');
 
   if (error.value) {
+    // TODO: Create an error handling mechanism using Pinia.
     return;
   }
 
@@ -29,6 +30,7 @@ const getPlanets = async () => {
   }
 };
 
+// TODO: Consider moving the sorting logic.
 const filteredPlanets = computed<Planet[]>(() => {
   const query = debouncedSearch.value.toLowerCase();
   const filtered = planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
