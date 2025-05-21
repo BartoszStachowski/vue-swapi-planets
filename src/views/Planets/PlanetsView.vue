@@ -4,10 +4,13 @@ import type { Planet } from '@/types/Planet';
 // components
 import PaginationComponent from '@/components/Core/PaginationComponent.vue';
 import PlanetCard from '@/components/Planets/PlanetCard.vue';
+// composables
+import { useDebounce } from '@/composables/useDebounce';
 
 const planets = ref<Planet[]>([]);
-const search = ref('');
-const currentPage = ref(1);
+const search = ref<string>('');
+const debouncedSearch = useDebounce(search, 400);
+const currentPage = ref<number>(1);
 const itemsPerPage = 6;
 
 const getPlanets = async () => {
@@ -17,7 +20,7 @@ const getPlanets = async () => {
 };
 
 const filteredPlanets = computed(() => {
-  const query = search.value.toLowerCase();
+  const query = debouncedSearch.value.toLowerCase();
   return planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
 });
 
@@ -26,9 +29,7 @@ const paginatedPlanets = computed(() => {
   return filteredPlanets.value.slice(start, start + itemsPerPage);
 });
 
-// Reset page to 1 when the query changes
-watch(search, () => {
-  console.log('search', search.value);
+watch(debouncedSearch, () => {
   currentPage.value = 1;
 });
 
