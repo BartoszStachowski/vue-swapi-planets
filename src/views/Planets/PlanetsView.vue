@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { Planet } from '@/types/Planet';
 // components
 import PaginationComponent from '@/components/Core/PaginationComponent.vue';
 import PlanetCard from '@/components/Planets/PlanetCard.vue';
 
 const planets = ref<Planet[]>([]);
+const search = ref('');
+const currentPage = ref(1);
+const itemsPerPage = 6;
 
 const getPlanets = async () => {
   const response = await fetch('https://swapi.info/api/planets');
@@ -13,12 +16,20 @@ const getPlanets = async () => {
   planets.value = data;
 };
 
-const itemsPerPage = 6;
-const currentPage = ref(1);
+const filteredPlanets = computed(() => {
+  const query = search.value.toLowerCase();
+  return planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
+});
 
 const paginatedPlanets = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
-  return planets.value.slice(start, start + itemsPerPage);
+  return filteredPlanets.value.slice(start, start + itemsPerPage);
+});
+
+// Reset page to 1 when the query changes
+watch(search, () => {
+  console.log('search', search.value);
+  currentPage.value = 1;
 });
 
 await getPlanets();
@@ -39,6 +50,7 @@ await getPlanets();
         class="h-8 cursor-pointer border-b text-center text-lg font-light text-white focus:shadow-lg focus:shadow-slate-500/50 focus:outline focus:transition-shadow focus:duration-300 focus:ease-out"
         type="text"
         placeholder="Enter planet name"
+        v-model="search"
       />
     </section>
 
@@ -52,7 +64,7 @@ await getPlanets();
 
     <PaginationComponent
       :itemsPerPage="itemsPerPage"
-      :numberOfElements="planets.length"
+      :numberOfElements="filteredPlanets.length"
       :currentPage="currentPage"
       @pageChanged="(value) => (currentPage = value)"
     />
