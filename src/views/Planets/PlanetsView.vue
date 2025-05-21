@@ -12,16 +12,44 @@ const search = ref<string>('');
 const debouncedSearch = useDebounce(search, 400);
 const currentPage = ref<number>(1);
 const itemsPerPage = 6;
+const sortOrder = ref<'default' | 'asc' | 'desc' | 'population-asc' | 'population-desc'>('default');
 
 const getPlanets = async () => {
-  const response = await fetch('https://swapi.info/api/planets');
-  const data = await response.json();
-  planets.value = data;
+  try {
+    const response = await fetch('https://swapi.info/api/planets');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    planets.value = data;
+  } catch (error) {
+    console.error('Error fetching planets:', error);
+  }
 };
 
 const filteredPlanets = computed(() => {
   const query = debouncedSearch.value.toLowerCase();
-  return planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
+  const filtered = planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
+
+  if (sortOrder.value === 'asc') {
+    return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortOrder.value === 'desc') {
+    return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
+  } else if (sortOrder.value === 'population-asc') {
+    return [...filtered].sort((a, b) => {
+      const popA = isNaN(Number(a.population)) ? Number.MAX_SAFE_INTEGER : Number(a.population);
+      const popB = isNaN(Number(b.population)) ? Number.MAX_SAFE_INTEGER : Number(b.population);
+      return popA - popB;
+    });
+  } else if (sortOrder.value === 'population-desc') {
+    return [...filtered].sort((a, b) => {
+      const popA = isNaN(Number(a.population)) ? -1 : Number(a.population);
+      const popB = isNaN(Number(b.population)) ? -1 : Number(b.population);
+      return popB - popA;
+    });
+  }
+
+  return filtered;
 });
 
 const paginatedPlanets = computed(() => {
@@ -53,6 +81,17 @@ await getPlanets();
         placeholder="Enter planet name"
         v-model="search"
       />
+
+      <div class="mt-4">
+        <label class="mr-2 text-white">Sort:</label>
+        <select v-model="sortOrder" class="rounded bg-gray-800 px-2 py-1 text-white">
+          <option value="default">default</option>
+          <option value="asc">A-Z</option>
+          <option value="desc">Z-A</option>
+          <option value="population-asc">population-asc</option>
+          <option value="population-desc">population-desc</option>
+        </select>
+      </div>
     </section>
 
     <section class="mb-10">
