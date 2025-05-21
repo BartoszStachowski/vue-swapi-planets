@@ -1,29 +1,31 @@
-<script setup lang="ts">
+<script setup lang="ts" async>
 import { ref, computed, watch } from 'vue';
 import type { Planet } from '@/types/Planet';
+import type { SortOrder } from '@/types/SortOrder';
 // components
 import PaginationComponent from '@/components/Core/PaginationComponent.vue';
 import PlanetCard from '@/components/Planets/PlanetCard.vue';
+import SortDropdown from '@/components/Core/SortDropdown.vue';
 // composables
 import { useDebounce } from '@/composables/useDebounce';
+import { useFetch } from '@/composables/useFetch';
 
 const planets = ref<Planet[]>([]);
 const search = ref<string>('');
 const debouncedSearch = useDebounce(search, 400);
 const currentPage = ref<number>(1);
 const itemsPerPage = 6;
-const sortOrder = ref<'default' | 'asc' | 'desc' | 'population-asc' | 'population-desc'>('default');
+const sortOrder = ref<SortOrder>('default');
 
 const getPlanets = async () => {
-  try {
-    const response = await fetch('https://swapi.info/api/planets');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data: Planet[] = await response.json();
-    planets.value = data;
-  } catch (error) {
-    console.error('Error fetching planets:', error);
+  const { data, error } = await useFetch<Planet[]>('https://swapi.info/api/planets');
+
+  if (error.value) {
+    return;
+  }
+
+  if (data.value) {
+    planets.value = data.value;
   }
 };
 
@@ -82,16 +84,7 @@ await getPlanets();
         v-model="search"
       />
 
-      <div class="mt-4">
-        <label class="mr-2 text-white">Sort:</label>
-        <select v-model="sortOrder" class="rounded bg-gray-800 px-2 py-1 text-white">
-          <option value="default">default</option>
-          <option value="asc">A-Z</option>
-          <option value="desc">Z-A</option>
-          <option value="population-asc">population-asc</option>
-          <option value="population-desc">population-desc</option>
-        </select>
-      </div>
+      <SortDropdown v-model:sortOrder="sortOrder" />
     </section>
 
     <section v-if="paginatedPlanets.length" class="mb-10">
