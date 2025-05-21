@@ -1,4 +1,4 @@
-<script setup lang="ts" async>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import type { Planet } from '@/types/Planet';
 import type { SortOrder } from '@/types/SortOrder';
