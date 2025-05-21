@@ -20,14 +20,14 @@ const getPlanets = async () => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const data = await response.json();
+    const data: Planet[] = await response.json();
     planets.value = data;
   } catch (error) {
     console.error('Error fetching planets:', error);
   }
 };
 
-const filteredPlanets = computed(() => {
+const filteredPlanets = computed<Planet[]>(() => {
   const query = debouncedSearch.value.toLowerCase();
   const filtered = planets.value.filter((planet) => planet.name.toLowerCase().includes(query));
 
@@ -52,7 +52,7 @@ const filteredPlanets = computed(() => {
   return filtered;
 });
 
-const paginatedPlanets = computed(() => {
+const paginatedPlanets = computed<Planet[]>(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   return filteredPlanets.value.slice(start, start + itemsPerPage);
 });
@@ -94,7 +94,7 @@ await getPlanets();
       </div>
     </section>
 
-    <section class="mb-10">
+    <section v-if="paginatedPlanets.length" class="mb-10">
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <li v-for="planet in paginatedPlanets" :key="planet.name">
           <PlanetCard :planet="planet" />
@@ -103,6 +103,7 @@ await getPlanets();
     </section>
 
     <PaginationComponent
+      v-if="paginatedPlanets.length"
       :itemsPerPage="itemsPerPage"
       :numberOfElements="filteredPlanets.length"
       :currentPage="currentPage"
