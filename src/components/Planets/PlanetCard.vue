@@ -1,15 +1,6 @@
 <script setup lang="ts">
 import type { Planet } from '@/types/Planet';
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  }).format(date);
-};
+import { formatDate } from '@/utils/formatDate';
 
 defineProps<{
   planet: Planet;
