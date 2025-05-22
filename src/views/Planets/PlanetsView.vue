@@ -9,6 +9,7 @@ import SortDropdown from '@/components/Core/SortDropdown.vue';
 // composables
 import { useDebounce } from '@/composables/useDebounce';
 import { useFetch } from '@/composables/useFetch';
+import { useErrorStore } from '@/stores/error';
 
 const planets = ref<Planet[]>([]);
 const search = ref<string>('');
@@ -21,7 +22,7 @@ const getPlanets = async () => {
   const { data, error } = await useFetch<Planet[]>('https://swapi.info/api/planets');
 
   if (error.value) {
-    // TODO: Create an error handling mechanism using Pinia.
+    useErrorStore().setError(error.value);
     return;
   }
 
