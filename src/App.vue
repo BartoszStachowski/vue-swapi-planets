@@ -2,6 +2,7 @@
 import { useErrorStore } from './stores/error';
 import PlanetsView from '@/views/Planets/PlanetsView.vue';
 import AppErrorSection from '@/components/Core/AppErrorSection.vue';
+import LoaderComponent from '@/components/Core/LoaderComponent.vue';
 
 const errorStore = useErrorStore();
 </script>
@@ -11,8 +12,7 @@ const errorStore = useErrorStore();
   <Suspense v-else>
     <PlanetsView />
     <template #fallback>
-      <!-- TODO: add loader -->
-      <h1 class="text-white">Loading...</h1>
+      <LoaderComponent />
     </template>
   </Suspense>
 </template>

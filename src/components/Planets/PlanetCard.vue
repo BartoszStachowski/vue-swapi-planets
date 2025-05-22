@@ -16,7 +16,9 @@ defineProps<{
 }>();
 </script>
 <template>
-  <div class="rounded-2xl bg-gray-800 p-6 shadow-lg transition hover:bg-gray-700">
+  <div
+    class="mx-auto max-w-xs rounded-2xl bg-gray-800 p-6 shadow-lg transition hover:bg-gray-700 md:max-w-none"
+  >
     <h2 class="mb-2 text-2xl font-semibold text-yellow-300">{{ planet.name }}</h2>
     <p class="card-paragraph">👥 Population: {{ planet.population }}</p>
     <p class="card-paragraph">🪐 Rotation period: {{ planet.rotation_period }}</p>
