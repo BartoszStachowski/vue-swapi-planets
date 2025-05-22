@@ -9,7 +9,7 @@ export async function useFetch<T>(url: string) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      throw new Error(`${response.status}`);
     }
 
     const result = await response.json();
