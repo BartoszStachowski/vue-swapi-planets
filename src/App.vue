@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useErrorStore } from './stores/error';
+import { useErrorStore } from '@/stores/error';
 import PlanetsView from '@/views/Planets/PlanetsView.vue';
 import AppErrorSection from '@/components/Core/AppErrorSection.vue';
 import LoaderComponent from '@/components/Core/LoaderComponent.vue';

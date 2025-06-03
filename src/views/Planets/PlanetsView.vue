@@ -87,13 +87,13 @@ await getPlanets();
         v-model="search"
       />
 
-      <SortDropdown v-model:sortOrder="sortOrder" />
+      <SortDropdown v-model="sortOrder" />
     </section>
 
     <section v-if="paginatedPlanets.length" class="mb-10">
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <li v-for="planet in paginatedPlanets" :key="planet.name">
-          <PlanetCard :planet="planet" />
+          <PlanetCard :planet />
         </li>
       </ul>
     </section>
