@@ -1,5 +1,7 @@
 # vue-swapi-planets
 
+Address: https://bartoszstachowski.github.io/vue-swapi-planets/
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
